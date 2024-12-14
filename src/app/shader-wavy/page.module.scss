@@ -1,0 +1,19 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #111215;
+  font-family: "Poppins", sans-serif;
+  color: white;
+}
+
+.canvas {
+  display: block;
+  transition: 1s transform;
+}
+
+.canvas:hover {
+  transform: scale(1.2);
+}

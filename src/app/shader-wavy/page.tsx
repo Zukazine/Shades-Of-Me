@@ -1,11 +1,17 @@
-import styles from './page.module.scss'
+'use client'
 
-const Page = () => {
+import dynamic from 'next/dynamic';
+import styles from "./page.module.scss"
+
+const ShaderPlane = dynamic(() => import('./_components/r3f-shader'), { ssr: false });
+
+const Home = () => {
   return (
-    <div id="imageContainer">
-      <img id="myImage" src="https://assets.codepen.io/9051928/retro.jpg" />
-    </div>
-  )
-}
+    <main className={`${styles.main}`}>
+      {/* <AnimatedImage /> */}
+      <ShaderPlane />
+    </main>
+  );
+};
 
-export default Page
+export default Home;
