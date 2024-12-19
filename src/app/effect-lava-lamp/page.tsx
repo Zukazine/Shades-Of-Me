@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 const Page = () => {
+
   useEffect(() => {
     const interBubble = document.querySelector<HTMLDivElement>('.interactive')!;
     let curX = 0;
@@ -26,6 +27,8 @@ const Page = () => {
     
     move();
 
+    
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
@@ -34,7 +37,7 @@ const Page = () => {
   return (
     <>
       <div className="text-container">
-        Bubbles
+        
       </div>
       <div className="gradient-bg">
         <svg xmlns="http://www.w3.org/2000/svg">
