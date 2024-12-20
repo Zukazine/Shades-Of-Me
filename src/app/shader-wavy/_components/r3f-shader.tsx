@@ -1,6 +1,7 @@
   import React, { useRef, useState } from "react";
-  import { Canvas, useFrame } from "@react-three/fiber";
+  import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
   import * as THREE from "three";
+import { GizmoHelper, GizmoViewport, OrbitControls, Text } from "@react-three/drei";
 
   const ANIMATION_CONFIG = {
     transitionSpeed: 0.03,
@@ -39,6 +40,13 @@
       mousePosition: { x: 0, y: 0 },
       waveIntensity: ANIMATION_CONFIG.baseIntensity,
     });
+
+    console.log({
+      targetStateX: targetState.mousePosition.x,
+      // targetStateY: targetState.mousePosition.y,
+      currentStateX: currentState.current.mousePosition.x,
+      // currentStateY: currentState.current.mousePosition.y
+    })
 
     const updateValue = (target: number, current: number, speed: number): number => {
       return current + (target - current) * speed;
@@ -140,14 +148,19 @@
     );
 
     return (
-      <div 
-        id="wave-imageContainer"
-        className="relative size-[700px] overflow-hidden flex justify-center items-center rounded-lg"
-      >
-        <Canvas className="wave-canvas filter saturate-[.3] transition-all duration-500 ease-in-out hover:saturate-100">
+        <Canvas className="filter saturate-[.3] transition-all duration-500 ease-in-out hover:saturate-100">
           <ShaderPlane texture={texture} />
+          <GizmoHelper
+            alignment="bottom-right"
+            margin={[80, 80]}
+          >
+            <GizmoViewport axisColors={['red', 'green', 'blue']} />
+          </GizmoHelper>
+          <axesHelper args={[6]}/>
+          <gridHelper args={[6]}/>
+          <OrbitControls makeDefault />
         </Canvas>
-      </div>  
+        
     );
   };
 
