@@ -37,6 +37,14 @@ const ShaderPlane = () => {
   const smoothStep = (target: number, current: number, alpha: number): number =>
     current + (target - current) * alpha;
 
+  const delta = new THREE.Vector2(
+    uniforms.current.u_mouse.value.x - uniforms.current.u_prevMouse.value.x,
+    uniforms.current.u_mouse.value.y - uniforms.current.u_prevMouse.value.y
+  );
+
+  // LOGGING DELTA FOR DEBUGGING (optional)
+  console.log("Delta: ", delta)
+
   // ANIMATION FUNCTION
   useFrame(() => {
     // MOUSE SMOOTHING
@@ -48,8 +56,14 @@ const ShaderPlane = () => {
 
     // UPDATE UNIFORMS
     if (uniforms.current) {
-      uniforms.current.u_mouse.value.set(currentState.current.x, currentState.current.y);
-      uniforms.current.u_prevMouse.value.set(prevState.current.x, prevState.current.y);
+      uniforms.current.u_mouse.value.set(
+        currentState.current.x, 
+        currentState.current.y
+      );
+      uniforms.current.u_prevMouse.value.set(
+        prevState.current.x, 
+        prevState.current.y
+      );
       uniforms.current.u_aberrationIntensity.value = aberrationIntensity;
     }
   });
