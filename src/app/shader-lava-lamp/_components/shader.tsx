@@ -1,46 +1,61 @@
-import React, { useRef } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { useRef, useState } from "react";
+import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
 import { vertexShader, fragmentShader } from "../shaders";
 import * as THREE from "three";
 import { GizmoHelper, GizmoViewport, OrbitControls } from "@react-three/drei";
 
-type ShaderUniforms = {
-  u_mouse: { value: THREE.Vector2 }
-  u_prevMouse: { value: THREE.Vector2 }
-  u_abberationIntensity : { value: number }
-  u_texture: { value: THREE.Texture }
+const myPalettes = ['#FFF9F5', '#7AAABC', '#FFF9F5', '#FFF9F5', '#39515A']
+
+type shaderMaterial = {
+  u_time: { value: number }
+  u_color: { value: THREE.ColorRepresentation[]}
 }
 
-export const Shader = () => {
-  const uniforms = useRef<ShaderUniforms>({
-    u_mouse: { value: new THREE.Vector2(0.5, 0.5) },
-    u_prevMouse: { value: new THREE.Vector2(0.5, 0.5) },
-    u_abberationIntensity: { value: 0 },
-    u_texture: { value: new THREE.TextureLoader()
-      .load("https://assets.codepen.io/9051928/palm-tree.jpg")
-     },
-  });
+const ShaderPlane = () => {
+  const colorsPlane = myPalettes.map((color: THREE.ColorRepresentation) => new THREE.Color(color))
+  console.log(colorsPlane)
+    
+  const uniforms = useRef<shaderMaterial>({
+    u_time: { value: 0 },
+    u_color: { value: colorsPlane }
+  })
+  
+  const clock = useRef(new THREE.Clock());
+
+  useFrame(() => {
+    if (uniforms.current) {
+      uniforms.current.u_time.value = clock.current.getElapsedTime() * 0.01
+    }
+  })
 
   return (
-    <Canvas camera={{
-      position: [0,0,1]
-    }}>
-      <mesh>
-        <planeGeometry args={[2,2]}/>
-        <shaderMaterial
-          uniforms={uniforms.current}
-          vertexShader={vertexShader}
-          fragmentShader={fragmentShader}
-        />
-      </mesh>
-      <GizmoHelper
-        alignment="bottom-right"
-        margin={[80, 80]}
+    <mesh>
+      <planeGeometry args={[4,4,600,600]}/>
+      <shaderMaterial 
+        uniforms={uniforms.current}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        wireframe={false}
+        side={2}
+      />
+    </mesh>
+  )
+} 
+
+export const Shader = () => {
+  return (
+    <div className="w-full h-full border border-red-500">
+      <Canvas
+        camera={{
+          position: [0, 0, 1],
+        }}
       >
-        <GizmoViewport axisColors={['red', 'green', 'blue']} />
-      </GizmoHelper>
-      <OrbitControls makeDefault />
-    </Canvas>
+        <ShaderPlane />
+        <GizmoHelper>
+          <GizmoViewport />
+        </GizmoHelper>
+        <OrbitControls makeDefault />
+      </Canvas>
+    </div>
   )
 }
-
